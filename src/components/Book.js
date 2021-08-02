@@ -1,32 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import {
+  BrowserRouter as Router,
+  Link,
+} from 'react-router-dom';
 import '../styles/scss/Book.scss';
 
-const Book = ({ book, removeBook }) => {
-  const handleRemoveBook = () => {
-    // eslint-disable-next-line no-alert
-    if (window.confirm('Are you sure you want to delete this book?')) {
-      removeBook(book.id);
-    }
-  };
-
-  return (
-    <div className="Lesson-Panel">
-      <div className="title">{book.title}</div>
-      <div className="category">{book.category}</div>
-      <button type="button" className="delete-button" onClick={handleRemoveBook}>Remove Book</button>
-    </div>
-  );
-};
+const Book = ({ book }) => (
+  <div className="Lesson-Panel">
+    <div className="title">{book.title}</div>
+    <div className="year">{book.year}</div>
+    <Link className="book" to={`/books/${book._id}`}>View Book</Link>
+  </div>
+);
 
 Book.propTypes = {
   book: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    _id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    category: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    year: PropTypes.number.isRequired,
   }).isRequired,
-  removeBook: PropTypes.func.isRequired,
 };
 
 export default Book;

@@ -1,14 +1,16 @@
 import React from 'react';
 import '../styles/scss/App.scss';
-
-import BooksList from '../containers/BooksList';
-import BooksForm from '../containers/BooksForm';
+import routes from '../router/index';
 
 function App() {
   return (
     <div className="panel-bg">
-      <BooksList />
-      <BooksForm />
+      <div className="header">
+        <div className="header-title">Book Catalog</div>
+      </div>
+      <main>
+        {routes}
+      </main>
     </div>
   );
 }

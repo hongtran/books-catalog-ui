@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
+import { connectRouter } from 'connected-react-router';
 import books from './books';
-import filter from './filter';
 
-const rootReducer = combineReducers({
+const rootReducer = history => combineReducers({
+  router: connectRouter(history),
   books,
-  filter,
 });
 
 export default rootReducer;

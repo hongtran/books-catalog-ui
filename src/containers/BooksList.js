@@ -1,58 +1,46 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { REMOVE_BOOK, CHANGE_FILTER } from '../actions';
+// import { connect } from 'react-redux';
+// import PropTypes from 'prop-types';
 import Book from '../components/Book';
-import CategoryFilter from '../components/CategoryFilter';
 import '../styles/scss/BooksList.scss';
+import BookService from '../services/BookService';
+import React, { useState, useEffect } from 'react';
 
-const filteredBooks = (books, filter) => {
-  if (filter === 'All') {
-    return books;
-  }
-  return books.filter(book => book.category === filter);
-};
-
-const BooksList = ({
-  books, filter, removeBook, changeFilter,
-}) => {
-  const handleFilterChange = event => {
-    const { value } = event.target;
-    changeFilter(value);
-  };
-
+const BooksList = () => {
+  const [books, setBooks] = useState([]);
+  const [isFetching, setIsFetching] = useState(false);
+  useEffect(() => {
+    setIsFetching(true);
+    BookService.getBookList()
+      .then(res => {
+        setBooks(res);
+      })
+      .catch(err => {
+        setBooks([]);
+        console.log(err);
+      })
+      .finally(() => {
+        setIsFetching(false);
+      });
+  }, []);
   return (
     <div className="book-list">
-      <div className="header">
-        <div className="header-title">Bookstore CMS</div>
-        <div className="category-container">
-          <CategoryFilter handleChange={handleFilterChange} />
-        </div>
-      </div>
       <div className="books-container">
-        {filteredBooks(books, filter).map(book => (
-          <Book key={book.title} book={book} removeBook={removeBook} />
-        ))}
+        {books.length > 0 ? books.map(book => (
+          <Book key={book._id} book={book} />
+        )) : <p>…Loading</p>}
       </div>
     </div>
   );
 };
 
 BooksList.propTypes = {
-  books: PropTypes.arrayOf(PropTypes.object).isRequired,
-  filter: PropTypes.string.isRequired,
-  removeBook: PropTypes.func.isRequired,
-  changeFilter: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  books: state.books,
-  filter: state.filter,
-});
+// const mapStateToProps = state => ({
+// });
 
-const mapDispatchToProps = dispatch => ({
-  removeBook: id => dispatch(REMOVE_BOOK(id)),
-  changeFilter: value => dispatch(CHANGE_FILTER(value)),
-});
+// const mapDispatchToProps = dispatch => ({
+// });
 
-export default connect(mapStateToProps, mapDispatchToProps, null)(BooksList);
+// export default connect(mapStateToProps, mapDispatchToProps, null)(BooksList);
+export default BooksList;
